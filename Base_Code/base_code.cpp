@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <vector>
+
 #include "VDeleter.hpp"
 
 template <typename T>
@@ -49,6 +51,7 @@ private:
 		VkInstanceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;
+
 		/*
 		 These extensions are needed to interface with the window system
 		 This is profided by glfw
@@ -64,6 +67,19 @@ private:
 
 		// Determine the global validation layer to enable
 		createInfo.enabledLayerCount = 0;
+
+		uint32_t extensionCount = 0;
+		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+
+		std::vector<VkExtensionProperties> extensions(extensionCount);
+
+		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+
+		printf("available extensions:\n");
+		for (const auto& extension : extensions)
+		{
+			printf("\t %s\n", extension.extensionName);
+		}
 
 	    /*
           Create an instance
